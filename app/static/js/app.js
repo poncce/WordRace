@@ -51,10 +51,6 @@ const App = (() => {
     _on('copy-link-btn',     'click', () => _copyToClipboard(`${location.origin}/join/${_roomCode}`, 'Enlace copiado'));
     _on('start-game-btn',    'click', _startGame);
 
-    // Settings steppers
-    _onStepper('wl-dec', 'wl-inc', 'val-word-length', 'word_length', 5, 8);
-    _onStepper('ma-dec', 'ma-inc', 'val-max-attempts', 'max_attempts', 3, 10);
-
     // ── Results screen
     _on('back-to-room-btn', 'click', _backToRoom);
 
@@ -337,10 +333,6 @@ const App = (() => {
     UI.updateRoomCode(_roomCode);
     UI.renderPlayersList(_players, _playerId, _getHostId());
     UI.setHostControls(_isHost);
-    UI.updateSetting('word_length', _settings.word_length);
-    UI.updateSetting('max_attempts', _settings.max_attempts);
-    document.getElementById('val-word-length').textContent = _settings.word_length;
-    document.getElementById('val-max-attempts').textContent = _settings.max_attempts;
   }
 
   function _leaveRoom() {
@@ -404,24 +396,6 @@ const App = (() => {
     }
     _pendingSubmit = true;
     SocketClient.emit('submit_guess', { word: GameState.getSubmitWord(), player_id: _playerId });
-  }
-
-  // ── Settings steppers ─────────────────────────────────────────────────
-  function _onStepper(decId, incId, valId, key, min, max) {
-    _on(decId, 'click', () => {
-      const current = _settings[key];
-      if (current <= min) return;
-      _settings[key] = current - 1;
-      document.getElementById(valId).textContent = _settings[key];
-      SocketClient.emit('update_settings', { player_id: _playerId, settings: { ..._settings } });
-    });
-    _on(incId, 'click', () => {
-      const current = _settings[key];
-      if (current >= max) return;
-      _settings[key] = current + 1;
-      document.getElementById(valId).textContent = _settings[key];
-      SocketClient.emit('update_settings', { player_id: _playerId, settings: { ..._settings } });
-    });
   }
 
   // ── Session persistence ───────────────────────────────────────────────
