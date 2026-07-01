@@ -269,26 +269,13 @@ ul     { list-style: none; }
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid var(--border);
 }
-.setting-row:last-of-type { border-bottom: none; }
+#settings-card .setting-row { justify-content: center; }
+#settings-card .setting-info { text-align: center; }
 .setting-label { font-weight: 600; font-size: .9rem; }
 .setting-desc  { font-size: .75rem; color: var(--text-muted); }
-.setting-control { display: flex; align-items: center; gap: 12px; }
-.stepper-btn {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--bg4);
-  color: var(--text);
-  font-size: 1rem;
-  line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
-}
-.stepper-btn:hover { background: var(--border); }
-.stepper-btn:disabled { opacity: .3; cursor: not-allowed; }
-.stepper-val { font-size: 1.1rem; font-weight: 700; min-width: 24px; text-align: center; }
+.invite-card .room-code-display { text-align: center; }
+.invite-card .code-actions { align-items: center; }
 
 .waiting-footer {
   display: flex;

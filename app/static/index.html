@@ -81,32 +81,34 @@
         <ul id="players-list" class="players-list"></ul>
       </div>
 
-      <!-- Right: settings (host only) -->
+      <!-- Right: room info (read-only) -->
       <div class="card settings-card" id="settings-card">
-        <h3>Configuración</h3>
+        <h3>Partida</h3>
         <div class="setting-row">
           <div class="setting-info">
-            <span class="setting-label">Longitud de palabra</span>
-            <span class="setting-desc">letras por palabra</span>
-          </div>
-          <div class="setting-control">
-            <button class="stepper-btn" id="wl-dec">−</button>
-            <span class="stepper-val" id="val-word-length">5</span>
-            <button class="stepper-btn" id="wl-inc">+</button>
+            <span class="setting-label">🎯 Palabra: 5 letras</span>
           </div>
         </div>
         <div class="setting-row">
           <div class="setting-info">
-            <span class="setting-label">Intentos</span>
-            <span class="setting-desc">intentos por jugador</span>
-          </div>
-          <div class="setting-control">
-            <button class="stepper-btn" id="ma-dec">−</button>
-            <span class="stepper-val" id="val-max-attempts">6</span>
-            <button class="stepper-btn" id="ma-inc">+</button>
+            <span class="setting-label">🔄 Intentos: 6</span>
           </div>
         </div>
-        <p id="settings-readonly-msg" class="hint hidden">Solo el anfitrión puede cambiar la configuración.</p>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">👥 Jugadores: 1/8</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">🏆 Gana quien adivine primero</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">⏱️ Sin límite de tiempo</span>
+          </div>
+        </div>
       </div>
     </div>
 
