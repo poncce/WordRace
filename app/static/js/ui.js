@@ -65,19 +65,9 @@ const UI = (() => {
   function setHostControls(isHost) {
     const startBtn  = document.getElementById('start-game-btn');
     const waitHint  = document.getElementById('waiting-hint');
-    const roMsg     = document.getElementById('settings-readonly-msg');
-    const steppers  = document.querySelectorAll('.stepper-btn');
 
     if (startBtn)  startBtn.classList.toggle('hidden', !isHost);
     if (waitHint)  waitHint.classList.toggle('hidden', isHost);
-    if (roMsg)     roMsg.classList.toggle('hidden', isHost);
-    steppers.forEach(btn => { btn.disabled = !isHost; });
-  }
-
-  function updateSetting(key, value) {
-    const map = { word_length: 'val-word-length', max_attempts: 'val-max-attempts' };
-    const el = document.getElementById(map[key]);
-    if (el) el.textContent = value;
   }
 
   // ── Game board ───────────────────────────────────────────────────────
@@ -332,7 +322,7 @@ const UI = (() => {
 
   return {
     showScreen, toast,
-    updateRoomCode, renderPlayersList, setHostControls, updateSetting,
+    updateRoomCode, renderPlayersList, setHostControls,
     buildBoard, renderCurrentInput, revealGuessResult, shakeRow, setGuessMessage,
     buildKeyboard, updateKeyboard,
     renderPlayersProgress, updatePlayerProgress,
