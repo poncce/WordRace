@@ -1,51 +1,50 @@
 # 🎯 Wordle Race
 
-> Un **Wordle multijugador en español**, jugado en tiempo real.
-> Creá una sala, invitá a tus amigos con un código y compitan para descubrir la palabra antes que los demás.
+> Un **Wordle multijugador en español**, jugado en tiempo real. Creá una sala, invitá a tus amigos con un código y compitan para descubrir la palabra antes que los demás.
 
 ---
 
-## 🌐 Jugar ahora
+# 🌐 Probar la aplicación
 
-La aplicación ya se encuentra desplegada y lista para usar.
+La aplicación ya se encuentra desplegada y disponible para cualquier usuario.
 
 👉 **https://wordiirace.onrender.com/**
 
-No es necesario instalar nada: simplemente ingresá a la URL desde cualquier navegador y comenzá a jugar.
+No es necesario instalar nada. Solo ingresá a la URL desde cualquier navegador, creá una sala o uníte a una existente y comenzá a jugar.
 
 ---
 
-## 📖 Descripción
+# 📖 Descripción
 
 Wordle Race permite que varios jugadores participen simultáneamente de una misma partida de Wordle.
 
-Todos reciben la **misma palabra oculta** al mismo tiempo y gana quien la adivine utilizando **menos intentos**. Si hay empate, se desempata por el **menor tiempo de resolución**.
+Todos reciben la **misma palabra oculta** al mismo tiempo y gana quien la adivine utilizando **menos intentos**. En caso de empate, se utiliza el **tiempo de resolución** como criterio de desempate.
 
 ---
 
-## 🕹️ ¿Cómo se juega?
+# 🕹️ ¿Cómo se juega?
 
 1. 🎮 Un jugador crea una sala.
-2. 🔗 Comparte el código o el enlace con los demás.
-3. 👥 Los jugadores ingresan a la sala.
+2. 🔗 Comparte el código o el enlace de invitación.
+3. 👥 Los demás jugadores se unen a la sala.
 4. ▶️ El host inicia la partida.
-5. ✍️ Todos intentan descubrir la misma palabra.
-6. 🏆 Gana quien la resuelve primero con la mejor puntuación.
+5. ✍️ Todos intentan descubrir la misma palabra en simultáneo.
+6. 🏆 Gana quien la resuelve con menos intentos y en el menor tiempo.
 
-### Sistema de colores
+## Sistema de colores
 
 | Color | Significado |
-|-------|-------------|
+| ------ | ----------- |
 | 🟩 Verde | Letra correcta en la posición correcta |
 | 🟨 Amarillo | Letra correcta en una posición incorrecta |
 | ⬜ Gris | La letra no pertenece a la palabra |
 
-Durante la partida es posible ver el **progreso de los demás jugadores** sin revelar las letras ingresadas.
+Durante la partida es posible observar el progreso de los demás jugadores sin revelar las letras que escribieron.
 
-Al finalizar se muestra un **ranking** ordenado por:
+Al finalizar se genera un ranking ordenado por:
 
 1. Menor cantidad de intentos.
-2. Menor tiempo empleado.
+2. Menor tiempo de resolución.
 
 ---
 
@@ -55,13 +54,13 @@ Al finalizar se muestra un **ranking** ordenado por:
 - 🔗 Enlace directo para unirse a una sala.
 - ⚡ Juego en tiempo real mediante **WebSockets (Socket.IO)**.
 - 🔄 Sin necesidad de recargar la página.
-- ⚙️ Configuración de:
-  - palabras de **5 a 8 letras**
-  - **3 a 10 intentos** máximos
-- 🔌 Reconexión automática de jugadores.
+- ⚙️ Configuración de la partida:
+  - Palabras de **5 a 8 letras**.
+  - Entre **3 y 10 intentos**.
+- 🔌 Reconexión automática de jugadores en caso de desconexión.
 - 📚 Validación de palabras utilizando el diccionario de la **RAE**.
-- 📊 Ranking en vivo.
-- 🧹 Eliminación automática de salas inactivas.
+- 📊 Ranking en vivo según intentos y tiempo.
+- 🧹 Eliminación automática de salas inactivas y jugadores desconectados.
 
 ---
 
@@ -70,11 +69,11 @@ Al finalizar se muestra un **ranking** ordenado por:
 | Área | Tecnología |
 |------|------------|
 | Backend | Python 3 + Flask |
-| Tiempo Real | Flask-SocketIO (WebSockets) |
+| Tiempo real | Flask-SocketIO (WebSockets) |
 | Frontend | HTML, CSS y JavaScript Vanilla |
 | Persistencia | En memoria (sin base de datos) |
-| Producción | Gunicorn + simple-websocket |
-| Deploy | Render |
+| Servidor de producción | Gunicorn + simple-websocket |
+| Despliegue | Render |
 
 ---
 
@@ -95,25 +94,19 @@ run.py
 requirements.txt
 ```
 
-La arquitectura está organizada por capas (**Domain**, **Repositories** y **Services**) para mantener una clara separación de responsabilidades y facilitar futuras migraciones a una base de datos persistente.
+La aplicación está organizada siguiendo una arquitectura por capas (**Domain**, **Repositories** y **Services**), permitiendo mantener una clara separación de responsabilidades y facilitando futuras ampliaciones o cambios en la persistencia.
 
 ---
 
 # ☁️ Despliegue
 
-El proyecto se encuentra desplegado en **Render** y utiliza:
-
-- Gunicorn
-- Flask-SocketIO
-- simple-websocket
-
-para brindar soporte completo a WebSockets en producción.
+La aplicación se encuentra desplegada en **Render**, utilizando **Gunicorn** junto con **simple-websocket** para ofrecer soporte completo de WebSockets en producción.
 
 ---
 
 # 🎓 Contexto académico
 
-Proyecto desarrollado para la materia **Programación sobre Redes**.
+Proyecto desarrollado como trabajo grupal para la materia **Programación sobre Redes**.
 
 **Docente**
 
@@ -128,18 +121,13 @@ Proyecto desarrollado para la materia **Programación sobre Redes**.
 
 ---
 
-## ⭐ Características principales
+# ⭐ Características principales
 
-✅ Multijugador en tiempo real
-
-✅ Salas privadas
-
-✅ Ranking automático
-
-✅ Reconexión de jugadores
-
-✅ Sin base de datos
-
-✅ Arquitectura por capas
-
-✅ Desplegado en Render
+- ✅ Multijugador en tiempo real.
+- ✅ Salas privadas.
+- ✅ Ranking automático.
+- ✅ Configuración personalizada de las partidas.
+- ✅ Reconexión de jugadores.
+- ✅ Sin base de datos.
+- ✅ Arquitectura por capas.
+- ✅ Desplegado en Render.
