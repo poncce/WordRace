@@ -15,9 +15,9 @@ class Config:
 
     # Game settings bounds
     WORD_LENGTH_MIN: int = 5
-    WORD_LENGTH_MAX: int = 8
-    MAX_ATTEMPTS_MIN: int = 3
-    MAX_ATTEMPTS_MAX: int = 10
+    WORD_LENGTH_MAX: int = 5
+    MAX_ATTEMPTS_MIN: int = 6
+    MAX_ATTEMPTS_MAX: int = 6
 
     # RAE API
     RAE_TIMEOUT_SECONDS: int = int(os.getenv("RAE_TIMEOUT_SECONDS", 5))
