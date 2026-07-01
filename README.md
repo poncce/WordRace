@@ -5,6 +5,16 @@
 
 ---
 
+## 🌐 Jugar ahora
+
+La aplicación ya se encuentra desplegada y lista para usar.
+
+👉 **https://wordiirace.onrender.com/**
+
+No es necesario instalar nada: simplemente ingresá a la URL desde cualquier navegador y comenzá a jugar.
+
+---
+
 ## 📖 Descripción
 
 Wordle Race permite que varios jugadores participen simultáneamente de una misma partida de Wordle.
@@ -89,66 +99,9 @@ La arquitectura está organizada por capas (**Domain**, **Repositories** y **Ser
 
 ---
 
-# 🚀 Ejecutarlo localmente
-
-## Requisitos
-
-- Python **3.10** o superior
-
-## 1. Clonar el repositorio
-
-```bash
-git clone <URL_DEL_REPO>
-cd wordle-race
-```
-
-## 2. Crear un entorno virtual (opcional)
-
-### Linux / macOS
-
-```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-### Windows
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-## 3. Instalar dependencias
-
-```bash
-pip install -r requirements.txt
-```
-
-## 4. Configurar variables de entorno
-
-```bash
-cp .env.example .env
-```
-
-## 5. Ejecutar el servidor
-
-```bash
-python run.py
-```
-
-La aplicación estará disponible en:
-
-```
-http://localhost:5000
-```
-
----
-
 # ☁️ Despliegue
 
-El proyecto está preparado para desplegarse en **Render**.
-
-Utiliza:
+El proyecto se encuentra desplegado en **Render** y utiliza:
 
 - Gunicorn
 - Flask-SocketIO
@@ -189,4 +142,4 @@ Proyecto desarrollado para la materia **Programación sobre Redes**.
 
 ✅ Arquitectura por capas
 
-✅ Fácil de desplegar en Render
+✅ Desplegado en Render
