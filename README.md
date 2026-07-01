@@ -1,4 +1,4 @@
-# 🎯 Wordle Race
+# 🎯 WordRace
 
 > Un **Wordle multijugador en español**, jugado en tiempo real. Creá una sala, invitá a tus amigos con un código y compitan para descubrir la palabra antes que los demás.
 
@@ -16,7 +16,7 @@ No es necesario instalar nada. Solo ingresá a la URL desde cualquier navegador,
 
 # 📖 Descripción
 
-Wordle Race permite que varios jugadores participen simultáneamente de una misma partida de Wordle.
+WordRace permite que varios jugadores participen simultáneamente de una misma partida de Wordle.
 
 Todos reciben la **misma palabra oculta** al mismo tiempo y gana quien la adivine utilizando **menos intentos**. En caso de empate, se utiliza el **tiempo de resolución** como criterio de desempate.
 
@@ -131,3 +131,9 @@ Proyecto desarrollado como trabajo grupal para la materia **Programación sobre 
 - ✅ Sin base de datos.
 - ✅ Arquitectura por capas.
 - ✅ Desplegado en Render.
+
+## 🚧 Estado del proyecto
+
+**WordRace** continúa en fase de **desarrollo y depuración**, por lo que es posible que algunas funcionalidades presenten errores o comportamientos inesperados.
+
+Si encontrás algún problema, bug o tenés alguna sugerencia de mejora, te invitamos a reportarlo utilizando la sección de **Issues** del repositorio en GitHub. Tu feedback ayuda a mejorar el proyecto y corregir errores más rápidamente.
