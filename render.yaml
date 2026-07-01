@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: wordle-race
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --worker-class gthread --workers 1 --threads 100 --timeout 120 -b 0.0.0.0:$PORT run:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: ROOM_EXPIRY_SECONDS
+        value: 7200
+      - key: MAX_PLAYERS_PER_ROOM
+        value: 8
+      - key: CLEANUP_INTERVAL_SECONDS
+        value: 60
+      - key: RAE_TIMEOUT_SECONDS
+        value: 5
+      - key: PYTHON_VERSION
+        value: 3.13.0
+ 

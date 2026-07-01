@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wordle Race</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ── SCREEN: Nickname ─────────────────────────────────────────── -->
+  <div id="screen-nickname" class="screen active">
+    <div class="center-container">
+      <div class="logo-block">
+        <h1 class="logo">WORDLE <span>RACE</span></h1>
+        <p class="logo-sub">El Wordle multijugador en español</p>
+      </div>
+      <div class="card">
+        <h2>¿Cómo te llamas?</h2>
+        <p class="hint">Elige un apodo para jugar</p>
+        <input id="nickname-input" type="text" class="text-input"
+               placeholder="Tu apodo" maxlength="20" autocomplete="off" />
+        <button id="nickname-btn" class="btn btn-primary btn-full">Continuar →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: Lobby ────────────────────────────────────────────── -->
+  <div id="screen-lobby" class="screen">
+    <div class="center-container">
+      <div class="logo-block">
+        <h1 class="logo">WORDLE <span>RACE</span></h1>
+      </div>
+      <div class="player-tag">
+        Jugando como <strong id="lobby-nickname"></strong>
+        <button id="change-nickname-btn" class="btn-link">cambiar</button>
+      </div>
+      <div class="lobby-grid">
+        <div class="card">
+          <h2>Crear sala</h2>
+          <p class="hint">Invita a tus amigos con un código</p>
+          <button id="create-room-btn" class="btn btn-primary btn-full">Crear sala nueva</button>
+        </div>
+        <div class="divider-v">o</div>
+        <div class="card">
+          <h2>Unirse a sala</h2>
+          <p class="hint">Ingresa el código de 6 caracteres</p>
+          <input id="room-code-input" type="text" class="text-input text-mono"
+                 placeholder="ABC123" maxlength="6" autocomplete="off" />
+          <button id="join-room-btn" class="btn btn-secondary btn-full">Unirse</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: Waiting Room ─────────────────────────────────────── -->
+  <div id="screen-waiting" class="screen">
+    <div class="page-header">
+      <button id="leave-waiting-btn" class="btn-back">← Salir</button>
+      <h1 class="logo small">WORDLE <span>RACE</span></h1>
+      <div></div>
+    </div>
+    <div class="waiting-layout">
+      <!-- Left: invite panel -->
+      <div class="card invite-card">
+        <h3>Código de sala</h3>
+        <div class="room-code-display">
+          <span id="room-code-big" class="code-big"></span>
+          <div class="code-actions">
+            <button id="copy-code-btn" class="btn btn-ghost">📋 Copiar código</button>
+            <button id="copy-link-btn" class="btn btn-ghost">🔗 Copiar enlace</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: players -->
+      <div class="card players-card">
+        <h3>Jugadores (<span id="player-count">0</span> / 8)</h3>
+        <ul id="players-list" class="players-list"></ul>
+      </div>
+
+      <!-- Right: settings (host only) -->
+      <div class="card settings-card" id="settings-card">
+        <h3>Configuración</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Longitud de palabra</span>
+            <span class="setting-desc">letras por palabra</span>
+          </div>
+          <div class="setting-control">
+            <button class="stepper-btn" id="wl-dec">−</button>
+            <span class="stepper-val" id="val-word-length">5</span>
+            <button class="stepper-btn" id="wl-inc">+</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Intentos</span>
+            <span class="setting-desc">intentos por jugador</span>
+          </div>
+          <div class="setting-control">
+            <button class="stepper-btn" id="ma-dec">−</button>
+            <span class="stepper-val" id="val-max-attempts">6</span>
+            <button class="stepper-btn" id="ma-inc">+</button>
+          </div>
+        </div>
+        <p id="settings-readonly-msg" class="hint hidden">Solo el anfitrión puede cambiar la configuración.</p>
+      </div>
+    </div>
+
+    <div class="waiting-footer">
+      <p id="waiting-hint" class="hint">Esperando al anfitrión para comenzar…</p>
+      <button id="start-game-btn" class="btn btn-primary btn-large hidden">¡Comenzar juego!</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: Game ──────────────────────────────────────────────── -->
+  <div id="screen-game" class="screen">
+    <div class="game-topbar">
+      <span class="logo small">WORDLE <span>RACE</span></span>
+      <div id="game-info-bar"></div>
+    </div>
+    <div class="game-layout">
+      <!-- Main play area -->
+      <div class="game-main">
+        <div id="game-board" class="game-board"></div>
+        <div id="guess-message" class="guess-message" aria-live="polite"></div>
+        <div id="keyboard" class="keyboard"></div>
+      </div>
+      <!-- Sidebar: other players -->
+      <div class="game-sidebar">
+        <h3 class="sidebar-title">Jugadores</h3>
+        <div id="players-progress" class="players-progress-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: Results ───────────────────────────────────────────── -->
+  <div id="screen-results" class="screen">
+    <div class="center-container">
+      <h2 id="results-title" class="results-title"></h2>
+      <div class="secret-word-block">
+        <p class="hint">La palabra era</p>
+        <div id="secret-word" class="secret-word-tiles"></div>
+      </div>
+      <div id="rankings-list" class="rankings-list"></div>
+      <button id="back-to-room-btn" class="btn btn-primary">Volver a la sala</button>
+    </div>
+  </div>
+
+  <!-- ── Toast container ──────────────────────────────────────────── -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+          crossorigin="anonymous"></script>
+  <script src="/static/js/socket-client.js"></script>
+  <script src="/static/js/game.js"></script>
+  <script src="/static/js/ui.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

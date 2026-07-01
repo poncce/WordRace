@@ -1,0 +1,26 @@
+GITIGNORE
+# Entorno / secretos
+.env
+.venv/
+venv/
+env/
+ 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+ 
+# Herramientas locales / no relevantes en la nube
+start.bat
+.claude/
+ 
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+ 
+# Logs
+*.log
+ 
