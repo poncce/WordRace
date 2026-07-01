@@ -323,16 +323,4 @@ class RoomService:
 
     @staticmethod
     def _parse_settings(data: dict) -> RoomSettings:
-        wl = int(data.get("word_length", 5))
-        ma = int(data.get("max_attempts", 6))
-        if not (Config.WORD_LENGTH_MIN <= wl <= Config.WORD_LENGTH_MAX):
-            raise InvalidSettingsError(
-                f"Longitud de palabra debe estar entre {Config.WORD_LENGTH_MIN} y {Config.WORD_LENGTH_MAX}.",
-                "INVALID_SETTINGS",
-            )
-        if not (Config.MAX_ATTEMPTS_MIN <= ma <= Config.MAX_ATTEMPTS_MAX):
-            raise InvalidSettingsError(
-                f"Intentos debe estar entre {Config.MAX_ATTEMPTS_MIN} y {Config.MAX_ATTEMPTS_MAX}.",
-                "INVALID_SETTINGS",
-            )
-        return RoomSettings(word_length=wl, max_attempts=ma)
+        return RoomSettings(word_length=5, max_attempts=6)
