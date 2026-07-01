@@ -131,3 +131,9 @@ Proyecto desarrollado como trabajo grupal para la materia **Programación sobre 
 - ✅ Sin base de datos.
 - ✅ Arquitectura por capas.
 - ✅ Desplegado en Render.
+
+## 🚧 Estado del proyecto
+
+**Wordle Race** continúa en fase de **desarrollo y depuración**, por lo que es posible que algunas funcionalidades presenten errores o comportamientos inesperados.
+
+Si encontrás algún problema, bug o tenés alguna sugerencia de mejora, te invitamos a reportarlo utilizando la sección de **Issues** del repositorio en GitHub. Tu feedback ayuda a mejorar el proyecto y corregir errores más rápidamente.
