@@ -1,93 +1,192 @@
-🎯 Wordle Race
+# 🎯 Wordle Race
 
-Wordle multijugador en español, jugado en tiempo real. Creá una sala, invitá a tus amigos con un código y compitan para ver quién adivina la palabra primero. Todos juegan la misma palabra al mismo tiempo — gana quien la resuelve en menos intentos.
+> Un **Wordle multijugador en español**, jugado en tiempo real.
+> Creá una sala, invitá a tus amigos con un código y compitan para descubrir la palabra antes que los demás.
 
-🕹️ Cómo se juega
+---
 
+## 📖 Descripción
 
-Un jugador crea una sala y comparte el código (o el link directo) con los demás.
-Todos los jugadores se unen a la sala y esperan a que el host inicie la partida.
-Al arrancar, todos reciben la misma palabra oculta y compiten en simultáneo.
-Cada intento se marca con el clásico sistema de colores de Wordle:
+Wordle Race permite que varios jugadores participen simultáneamente de una misma partida de Wordle.
 
-🟩 Verde: letra correcta en la posición correcta
-🟨 Amarillo: letra correcta en la posición incorrecta
-⬜ Gris: letra no está en la palabra
+Todos reciben la **misma palabra oculta** al mismo tiempo y gana quien la adivine utilizando **menos intentos**. Si hay empate, se desempata por el **menor tiempo de resolución**.
 
+---
 
+## 🕹️ ¿Cómo se juega?
 
-Se puede ver en vivo el progreso de los demás jugadores (colores de sus intentos, sin revelar las letras) hasta que termina la partida.
-Al finalizar, se arma un ranking según quién resolvió la palabra en menos intentos y en menor tiempo.
+1. 🎮 Un jugador crea una sala.
+2. 🔗 Comparte el código o el enlace con los demás.
+3. 👥 Los jugadores ingresan a la sala.
+4. ▶️ El host inicia la partida.
+5. ✍️ Todos intentan descubrir la misma palabra.
+6. 🏆 Gana quien la resuelve primero con la mejor puntuación.
 
+### Sistema de colores
 
-✨ Funcionalidades
+| Color | Significado |
+|-------|-------------|
+| 🟩 Verde | Letra correcta en la posición correcta |
+| 🟨 Amarillo | Letra correcta en una posición incorrecta |
+| ⬜ Gris | La letra no pertenece a la palabra |
 
+Durante la partida es posible ver el **progreso de los demás jugadores** sin revelar las letras ingresadas.
 
-Salas privadas con código de invitación y link directo para unirse
-Tiempo real vía WebSockets (Socket.IO) — sin necesidad de recargar la página
-Configuración de partida: largo de palabra (5 a 8 letras) y cantidad máxima de intentos (3 a 10)
-Reconexión de jugadores: si alguien se desconecta, tiene una ventana de tiempo para volver a entrar sin perder su progreso
-Validación de palabras contra el diccionario de la RAE
-Ranking en vivo por intentos usados y tiempo de resolución
-Limpieza automática de salas inactivas y jugadores "fantasma"
+Al finalizar se muestra un **ranking** ordenado por:
 
+1. Menor cantidad de intentos.
+2. Menor tiempo empleado.
 
-🛠️ Stack técnico
+---
 
-CapaTecnologíaBackendPython 3 + FlaskTiempo realFlask-SocketIO (WebSockets)FrontendHTML, CSS y JavaScript vanillaPersistenciaEn memoria (sin base de datos)Servidor de producciónGunicorn (worker threaded) + simple-websocketDespliegueRender
+# ✨ Funcionalidades
 
-📁 Estructura del proyecto
+- 🏠 Salas privadas con código de invitación.
+- 🔗 Enlace directo para unirse a una sala.
+- ⚡ Juego en tiempo real mediante **WebSockets (Socket.IO)**.
+- 🔄 Sin necesidad de recargar la página.
+- ⚙️ Configuración de:
+  - palabras de **5 a 8 letras**
+  - **3 a 10 intentos** máximos
+- 🔌 Reconexión automática de jugadores.
+- 📚 Validación de palabras utilizando el diccionario de la **RAE**.
+- 📊 Ranking en vivo.
+- 🧹 Eliminación automática de salas inactivas.
 
+---
+
+# 🛠️ Stack Tecnológico
+
+| Área | Tecnología |
+|------|------------|
+| Backend | Python 3 + Flask |
+| Tiempo Real | Flask-SocketIO (WebSockets) |
+| Frontend | HTML, CSS y JavaScript Vanilla |
+| Persistencia | En memoria (sin base de datos) |
+| Producción | Gunicorn + simple-websocket |
+| Deploy | Render |
+
+---
+
+# 📂 Estructura del proyecto
+
+```text
 app/
-├── api/            # Endpoints HTTP (health check, info de salas, stats)
-├── data/           # Listado de palabras
-├── domain/         # Modelos de dominio (Room, Player, Game, excepciones)
-├── repositories/   # Persistencia en memoria de salas, jugadores y cache
-├── services/       # Lógica de negocio (salas, partidas, validación de palabras)
-├── sockets/        # Eventos y handlers de Socket.IO
-├── static/         # Frontend (HTML, CSS, JS)
-└── config.py       # Configuración de la app
+├── api/              # Endpoints HTTP
+├── data/             # Listado de palabras
+├── domain/           # Modelos de dominio
+├── repositories/     # Persistencia en memoria
+├── services/         # Lógica de negocio
+├── sockets/          # Eventos Socket.IO
+├── static/           # HTML, CSS y JavaScript
+└── config.py
 
-run.py              # Punto de entrada de la aplicación
-requirements.txt    # Dependencias de Python
+run.py
+requirements.txt
+```
 
-La arquitectura separa responsabilidades en capas (dominio, repositorios, servicios) para facilitar el mantenimiento y, eventualmente, poder reemplazar el almacenamiento en memoria por uno persistente (Redis, por ejemplo) sin tocar la lógica de negocio.
+La arquitectura está organizada por capas (**Domain**, **Repositories** y **Services**) para mantener una clara separación de responsabilidades y facilitar futuras migraciones a una base de datos persistente.
 
-🚀 Correrlo localmente
+---
 
-Requisitos: Python 3.10 o superior
+# 🚀 Ejecutarlo localmente
 
-bash# 1. Clonar el repositorio
+## Requisitos
+
+- Python **3.10** o superior
+
+## 1. Clonar el repositorio
+
+```bash
 git clone <URL_DEL_REPO>
 cd wordle-race
+```
 
-# 2. Crear entorno virtual (opcional pero recomendado)
+## 2. Crear un entorno virtual (opcional)
+
+### Linux / macOS
+
+```bash
 python -m venv venv
-source venv/bin/activate   # En Windows: venv\Scripts\activate
+source venv/bin/activate
+```
 
-# 3. Instalar dependencias
+### Windows
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+## 3. Instalar dependencias
+
+```bash
 pip install -r requirements.txt
+```
 
-# 4. Configurar variables de entorno
+## 4. Configurar variables de entorno
+
+```bash
 cp .env.example .env
+```
 
-# 5. Iniciar el servidor
+## 5. Ejecutar el servidor
+
+```bash
 python run.py
+```
 
-La app va a estar disponible en http://localhost:5000.
+La aplicación estará disponible en:
 
-☁️ Despliegue
+```
+http://localhost:5000
+```
 
-El proyecto está preparado para desplegarse en Render usando el archivo render.yaml incluido (Render Blueprint). El servidor de producción corre con Gunicorn en modo threaded, aprovechando simple-websocket para mantener el soporte completo de WebSockets sin depender de eventlet/gevent.
+---
 
-🎓 Contexto académico
+# ☁️ Despliegue
 
-Este proyecto fue desarrollado como trabajo grupal para la materia Programación sobre Redes, a cargo del docente Sergio Daniel Ioppolo.
+El proyecto está preparado para desplegarse en **Render**.
 
-Integrantes:
+Utiliza:
 
+- Gunicorn
+- Flask-SocketIO
+- simple-websocket
 
-Julián Prol
-Gonzalo Esteche
-Máximo Casanovas
-Ignacio Ponce
+para brindar soporte completo a WebSockets en producción.
+
+---
+
+# 🎓 Contexto académico
+
+Proyecto desarrollado para la materia **Programación sobre Redes**.
+
+**Docente**
+
+- Sergio Daniel Ioppolo
+
+### 👨‍💻 Integrantes
+
+- Julián Prol
+- Gonzalo Esteche
+- Máximo Casanovas
+- Ignacio Ponce
+
+---
+
+## ⭐ Características principales
+
+✅ Multijugador en tiempo real
+
+✅ Salas privadas
+
+✅ Ranking automático
+
+✅ Reconexión de jugadores
+
+✅ Sin base de datos
+
+✅ Arquitectura por capas
+
+✅ Fácil de desplegar en Render
