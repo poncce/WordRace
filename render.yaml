@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: wordle-race
+    name: WordiiRace
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt
