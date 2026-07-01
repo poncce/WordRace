@@ -1,18 +1,11 @@
-/**
- * SocketClient — wraps Socket.IO with:
- *   - Automatic reconnection + session restore
- *   - Heartbeat / ping-pong tracking
- *   - Typed event dispatch via a simple EventBus
- *   - Connection state tracking
- */
+
 
 const SocketClient = (() => {
   let _socket = null;
   let _pingInterval = null;
-  let _handlers = {};  // eventName -> [callback, ...]
+  let _handlers = {};
   let _connected = false;
 
-  // ── EventBus ────────────────────────────────────────────────────────
   function on(event, handler) {
     if (!_handlers[event]) _handlers[event] = [];
     _handlers[event].push(handler);
@@ -29,7 +22,6 @@ const SocketClient = (() => {
     });
   }
 
-  // ── Connection ───────────────────────────────────────────────────────
   function connect() {
     if (_socket) return;
 
@@ -47,7 +39,6 @@ const SocketClient = (() => {
       _dispatch('_connected', {});
       _startHeartbeat();
 
-      // Attempt session restore on reconnect
       const savedId   = localStorage.getItem('wr_player_id');
       const savedCode = localStorage.getItem('wr_room_code');
       if (savedId && savedCode) {
@@ -67,7 +58,6 @@ const SocketClient = (() => {
       _dispatch('_connect_error', { message: err.message });
     });
 
-    // Relay all server → client events to our bus
     const SERVER_EVENTS = [
       'room_created', 'room_joined', 'room_updated',
       'player_joined', 'player_left', 'player_disconnected',
@@ -83,7 +73,6 @@ const SocketClient = (() => {
     });
   }
 
-  // ── Heartbeat ────────────────────────────────────────────────────────
   function _startHeartbeat() {
     _pingInterval = setInterval(() => {
       if (_socket && _connected) {
@@ -97,7 +86,6 @@ const SocketClient = (() => {
     _pingInterval = null;
   }
 
-  // ── Emit helpers ─────────────────────────────────────────────────────
   function emit(event, data = {}) {
     if (!_socket || !_connected) {
       console.warn('[socket] tried to emit while disconnected:', event);

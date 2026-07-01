@@ -42,9 +42,9 @@ class RoomService:
         self._rooms = room_repo
         self._players = player_repo
 
-    # ------------------------------------------------------------------
-    # Room lifecycle
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def create_room(
         self, nickname: str, socket_id: str, settings: dict
@@ -109,9 +109,7 @@ class RoomService:
     def leave_room(
         self, player_id: str
     ) -> Tuple[Optional[Room], bool, Optional[str]]:
-        """
-        Returns (room_or_None, room_deleted, new_host_id_or_None).
-        """
+        
         player = self._players.get(player_id)
         if not player or not player.room_id:
             return None, False, None
@@ -121,17 +119,17 @@ class RoomService:
             self._players.delete(player_id)
             return None, False, None
 
-        # Remove player from room and global store
+        
         room.players.pop(player_id, None)
         self._players.delete(player_id)
 
-        # If room is now empty, delete it
+        
         if not room.players:
             self._rooms.delete(room.id)
             logger.info("Room %s deleted (empty)", room.code)
             return room, True, None
 
-        # Transfer host if necessary
+        
         new_host_id: Optional[str] = None
         if room.host_id == player_id:
             new_host = next(iter(room.players.values()))
@@ -148,10 +146,7 @@ class RoomService:
     def handle_disconnect(
         self, socket_id: str
     ) -> Tuple[Optional[Player], Optional[Room], Optional[str]]:
-        """
-        Mark player as disconnected without removing them immediately.
-        Returns (player, room, new_host_id_or_None).
-        """
+        
         player = self._players.get_by_socket(socket_id)
         if not player:
             return None, None, None
@@ -164,7 +159,7 @@ class RoomService:
         new_host_id: Optional[str] = None
 
         if room:
-            # If disconnected player was host, transfer immediately
+            
             if room.host_id == player.id:
                 connected = [p for p in room.players.values() if p.connected and p.id != player.id]
                 if connected:
@@ -200,9 +195,9 @@ class RoomService:
         logger.info("Player %s reconnected to room %s", player.nickname, room.code)
         return player, room
 
-    # ------------------------------------------------------------------
-    # Settings
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def update_settings(self, player_id: str, settings: dict) -> Room:
         player = self._players.get(player_id)
@@ -222,9 +217,9 @@ class RoomService:
         self._rooms.update(room)
         return room
 
-    # ------------------------------------------------------------------
-    # Queries
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def get_room_by_player(self, player_id: str) -> Optional[Room]:
         player = self._players.get(player_id)
@@ -239,7 +234,7 @@ class RoomService:
         return self._players.get(player_id)
 
     def reset_room(self, player_id: str) -> Room:
-        """Reset a finished room back to WAITING so the host can start a new game."""
+        
         player = self._players.get(player_id)
         if not player:
             raise PlayerNotFoundError(player_id)
@@ -255,7 +250,7 @@ class RoomService:
         return room
 
     def update_player_socket(self, player_id: str, new_socket_id: str) -> None:
-        """Re-associate a player with a new socket without full reconnect flow."""
+        
         player = self._players.get(player_id)
         if player and player.socket_id != new_socket_id:
             player.socket_id = new_socket_id
@@ -264,9 +259,9 @@ class RoomService:
             self._players.update(player)
             logger.debug("Player %s socket updated to %s", player.nickname, new_socket_id)
 
-    # ------------------------------------------------------------------
-    # Cleanup
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def cleanup_expired_rooms(self) -> int:
         now = datetime.utcnow()
@@ -282,7 +277,7 @@ class RoomService:
         return len(expired)
 
     def cleanup_ghost_players(self) -> int:
-        """Remove disconnected players who exceeded the reconnection window."""
+        
         now = datetime.utcnow()
         removed = 0
         for room in self._rooms.list_all():
@@ -303,9 +298,9 @@ class RoomService:
                     self._rooms.update(room)
         return removed
 
-    # ------------------------------------------------------------------
-    # Helpers
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def _unique_code(self) -> str:
         for _ in range(10):

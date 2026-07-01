@@ -1,9 +1,4 @@
-"""
-Flask application factory.
 
-All dependencies are wired here (manual DI — no IoC container needed at this scale).
-To swap MemoryRepository for RedisRepository, change only the imports below.
-"""
 import logging
 import threading
 import time
@@ -40,7 +35,7 @@ def create_app() -> Flask:
 
     _configure_logging(app)
 
-    # --- Dependency wiring ---
+    
     room_repo = MemoryRoomRepository()
     player_repo = MemoryPlayerRepository()
     word_cache_repo = MemoryWordCacheRepository()
@@ -50,19 +45,19 @@ def create_app() -> Flask:
     room_svc = RoomService(room_repo, player_repo)
     game_svc = GameService(room_repo, player_repo, word_svc)
 
-    # Attach to app for use in routes / background tasks
+    
     app.room_service = room_svc
     app.game_service = game_svc
     app.cache_service = cache_svc
 
-    # --- Register blueprints ---
+    
     app.register_blueprint(api_bp)
 
-    # --- Register Socket.IO handlers ---
+    
     socketio.init_app(app)
     register_handlers(socketio, room_svc, game_svc)
 
-    # --- Serve SPA ---
+    
     @app.get("/")
     def index():
         return send_from_directory(app.static_folder, "index.html")
@@ -71,7 +66,7 @@ def create_app() -> Flask:
     def join_link(room_code: str):
         return send_from_directory(app.static_folder, "index.html")
 
-    # --- Background cleanup task ---
+    
     _start_cleanup_task(app, room_svc)
 
     return app

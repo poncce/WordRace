@@ -1,6 +1,4 @@
-"""
-Socket.IO event handlers — the presentation layer.
-"""
+
 from __future__ import annotations
 import logging
 from typing import Any
@@ -15,28 +13,24 @@ from app.sockets import events as ev
 
 logger = logging.getLogger(__name__)
 
-# Holds the SocketIO instance so we can call socketio.emit() for room broadcasts.
-# Using socketio.emit() is more reliable than flask_socketio.emit(to=room)
-# in threading mode because it bypasses request-context lookup.
+
+
+
 _sio: SocketIO | None = None
 
 
 def _err(code: str, message: str) -> None:
-    """Emit an error to the current socket only."""
+    
     emit(ev.ERROR, {"code": code, "message": message})
 
 
 def _broadcast(event: str, data: dict, room_id: str, skip_sid: str | None = None) -> None:
-    """Broadcast an event to all sockets in a room via the SocketIO instance."""
+    
     _sio.emit(event, data, to=room_id, namespace="/", skip_sid=skip_sid)
 
 
 def _resolve_player(room_svc: RoomService, sid: str, player_id: str | None = None):
-    """
-    Resolve a Player from either the current socket id or an explicit player_id.
-    If the socket_id doesn't match (e.g. the preview tool uses a different connection),
-    fall back to player_id lookup and re-associate the socket so future lookups work.
-    """
+    
     player = room_svc.get_player_by_socket(sid)
     if player:
         return player
@@ -52,9 +46,9 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
     global _sio
     _sio = socketio
 
-    # ------------------------------------------------------------------
-    # Connection lifecycle
-    # ------------------------------------------------------------------
+    
+    
+    
 
     @socketio.on("connect")
     def on_connect():
@@ -87,9 +81,9 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
                 room.id,
             )
 
-    # ------------------------------------------------------------------
-    # Room management
-    # ------------------------------------------------------------------
+    
+    
+    
 
     @socketio.on(ev.CREATE_ROOM)
     def on_create_room(data: dict[str, Any]):
@@ -208,9 +202,9 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
             logger.exception("Unexpected error in update_settings: %s", exc)
             _err("INTERNAL_ERROR", "Error interno del servidor.")
 
-    # ------------------------------------------------------------------
-    # Game
-    # ------------------------------------------------------------------
+    
+    
+    
 
     @socketio.on(ev.START_GAME)
     def on_start_game(data: dict[str, Any] | None = None):
@@ -229,9 +223,9 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
                 "player_ids": list(game.player_states.keys()),
             }
             logger.info("game_started → room %s (word=%s)", room.id, game.word)
-            # Direct emit to the requesting socket (guaranteed delivery)
+            
             emit(ev.GAME_STARTED, payload)
-            # Broadcast to everyone else in the room
+            
             _broadcast(ev.GAME_STARTED, payload, room.id, skip_sid=request.sid)
         except WordleRaceError as exc:
             _err(exc.code, exc.message)
@@ -254,7 +248,7 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
             game = result["game"]
             room = result["room"]
 
-            # Full guess result (with letters) → only to the guesser
+            
             emit(ev.GUESS_RESULT, {
                 "player_id": player.id,
                 "word": record.word,
@@ -264,7 +258,7 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
                 "won": result["won"],
             })
 
-            # Progress (tile colors only, no letters) → everyone else
+            
             pstate = game.player_states[player.id]
             _broadcast(
                 ev.PLAYER_PROGRESS,
@@ -309,9 +303,9 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
             logger.exception("Unexpected error in submit_guess: %s", exc)
             _err("INTERNAL_ERROR", "Error interno del servidor.")
 
-    # ------------------------------------------------------------------
-    # Reconnection
-    # ------------------------------------------------------------------
+    
+    
+    
 
     @socketio.on(ev.RECONNECT_PLAYER)
     def on_reconnect(data: dict[str, Any]):
@@ -347,9 +341,9 @@ def register_handlers(socketio: SocketIO, room_svc: RoomService, game_svc: GameS
             logger.exception("Unexpected error in reconnect_player: %s", exc)
             _err("INTERNAL_ERROR", "Error interno del servidor.")
 
-    # ------------------------------------------------------------------
-    # Heartbeat
-    # ------------------------------------------------------------------
+    
+    
+    
 
     @socketio.on(ev.PING)
     def on_ping(data: dict[str, Any]):

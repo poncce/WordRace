@@ -1,25 +1,16 @@
-/**
- * GameState — manages client-side game state.
- *
- * Tracks:
- *   - Current player's guesses and tile results
- *   - Keyboard letter states (best result seen per letter)
- *   - Other players' progress (mini-board tile colors)
- *   - Game configuration (word_length, max_attempts)
- */
+
 
 const GameState = (() => {
   let _wordLength   = 5;
   let _maxAttempts  = 6;
   let _currentRow   = 0;
-  let _currentInput = [];   // letters typed in the current row (not yet submitted)
-  let _guesses      = [];   // submitted GuessRecords: [{word, tiles:[{letter,state}]}]
+  let _currentInput = [];
+  let _guesses      = [];
   let _finished     = false;
   let _won          = false;
-  let _letterStates = {};   // letter -> 'correct'|'present'|'absent'
-  let _otherPlayers = {};   // player_id -> { nickname, attempts_used, won, finished, tiles_history }
+  let _letterStates = {};
+  let _otherPlayers = {};
 
-  // priority: correct > present > absent
   const STATE_PRIORITY = { correct: 3, present: 2, absent: 1 };
 
   function reset(wordLength, maxAttempts) {
@@ -49,7 +40,6 @@ const GameState = (() => {
     });
   }
 
-  // ── Input handling ───────────────────────────────────────────────────
   function addLetter(letter) {
     if (_finished || _currentInput.length >= _wordLength) return false;
     _currentInput.push(letter.toUpperCase());
@@ -76,7 +66,6 @@ const GameState = (() => {
     _currentInput = [];
   }
 
-  // ── After server confirms a guess ─────────────────────────────────
   function applyGuessResult(tiles, won, attemptsLeft) {
     const record = {
       word: tiles.map(t => t.letter).join(''),
@@ -86,7 +75,6 @@ const GameState = (() => {
     _currentRow++;
     _currentInput = [];
 
-    // Update keyboard states with best priority
     tiles.forEach(({ letter, state }) => {
       const current = STATE_PRIORITY[_letterStates[letter]] || 0;
       if ((STATE_PRIORITY[state] || 0) > current) {
@@ -100,7 +88,6 @@ const GameState = (() => {
     }
   }
 
-  // ── Other players ────────────────────────────────────────────────────
   function updateOtherPlayer(player_id, data) {
     if (!_otherPlayers[player_id]) {
       _otherPlayers[player_id] = { nickname: data.nickname || '?', tiles_history: [] };
@@ -129,7 +116,6 @@ const GameState = (() => {
     delete _otherPlayers[player_id];
   }
 
-  // ── Getters ──────────────────────────────────────────────────────────
   function getWordLength()    { return _wordLength; }
   function getMaxAttempts()   { return _maxAttempts; }
   function getCurrentRow()    { return _currentRow; }

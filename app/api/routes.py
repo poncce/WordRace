@@ -27,7 +27,7 @@ def stats():
 
 @api_bp.get("/debug/room/<room_code>/players")
 def debug_players(room_code: str):
-    """Debug: show all players and their socket_ids."""
+    
     room_svc = current_app.room_service
     room = room_svc._rooms.get_by_code(room_code.upper())
     if not room:
@@ -42,7 +42,7 @@ def debug_players(room_code: str):
 
 @api_bp.post("/debug/room/<room_code>/start")
 def debug_start_game(room_code: str):
-    """Debug: force-start the game for a room (using the host player)."""
+    
     room_svc = current_app.room_service
     game_svc = current_app.game_service
     room = room_svc._rooms.get_by_code(room_code.upper())

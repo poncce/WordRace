@@ -10,7 +10,6 @@
 </head>
 <body>
 
-  <!-- ── SCREEN: Nickname ─────────────────────────────────────────── -->
   <div id="screen-nickname" class="screen active">
     <div class="center-container">
       <div class="logo-block">
@@ -27,7 +26,6 @@
     </div>
   </div>
 
-  <!-- ── SCREEN: Lobby ────────────────────────────────────────────── -->
   <div id="screen-lobby" class="screen">
     <div class="center-container">
       <div class="logo-block">
@@ -55,7 +53,6 @@
     </div>
   </div>
 
-  <!-- ── SCREEN: Waiting Room ─────────────────────────────────────── -->
   <div id="screen-waiting" class="screen">
     <div class="page-header">
       <button id="leave-waiting-btn" class="btn-back">← Salir</button>
@@ -63,7 +60,7 @@
       <div></div>
     </div>
     <div class="waiting-layout">
-      <!-- Left: invite panel -->
+
       <div class="card invite-card">
         <h3>Código de sala</h3>
         <div class="room-code-display">
@@ -75,13 +72,11 @@
         </div>
       </div>
 
-      <!-- Center: players -->
       <div class="card players-card">
         <h3>Jugadores (<span id="player-count">0</span> / 8)</h3>
         <ul id="players-list" class="players-list"></ul>
       </div>
 
-      <!-- Right: room info (read-only) -->
       <div class="card settings-card" id="settings-card">
         <h3>Partida</h3>
         <div class="setting-row">
@@ -96,7 +91,7 @@
         </div>
         <div class="setting-row">
           <div class="setting-info">
-            <span class="setting-label">👥 Jugadores: 1/8</span>
+            <span class="setting-label">👥 Jugadores: <span id="settings-player-count">1</span>/8</span>
           </div>
         </div>
         <div class="setting-row">
@@ -118,20 +113,19 @@
     </div>
   </div>
 
-  <!-- ── SCREEN: Game ──────────────────────────────────────────────── -->
   <div id="screen-game" class="screen">
     <div class="game-topbar">
       <span class="logo small">WORDLE <span>RACE</span></span>
       <div id="game-info-bar"></div>
     </div>
     <div class="game-layout">
-      <!-- Main play area -->
+
       <div class="game-main">
         <div id="game-board" class="game-board"></div>
         <div id="guess-message" class="guess-message" aria-live="polite"></div>
         <div id="keyboard" class="keyboard"></div>
       </div>
-      <!-- Sidebar: other players -->
+
       <div class="game-sidebar">
         <h3 class="sidebar-title">Jugadores</h3>
         <div id="players-progress" class="players-progress-list"></div>
@@ -139,7 +133,6 @@
     </div>
   </div>
 
-  <!-- ── SCREEN: Results ───────────────────────────────────────────── -->
   <div id="screen-results" class="screen">
     <div class="center-container">
       <h2 id="results-title" class="results-title"></h2>
@@ -152,7 +145,6 @@
     </div>
   </div>
 
-  <!-- ── Toast container ──────────────────────────────────────────── -->
   <div id="toast-container" aria-live="polite"></div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"

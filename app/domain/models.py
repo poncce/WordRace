@@ -17,10 +17,10 @@ class GameState(str, Enum):
 
 
 class TileState(str, Enum):
-    CORRECT = "correct"    # Right letter, right position (green)
-    PRESENT = "present"    # Right letter, wrong position (yellow)
-    ABSENT = "absent"      # Letter not in word (gray)
-    EMPTY = "empty"        # Not yet guessed
+    CORRECT = "correct"    
+    PRESENT = "present"    
+    ABSENT = "absent"      
+    EMPTY = "empty"        
 
 
 @dataclass
@@ -71,7 +71,7 @@ class PlayerGameState:
         }
 
     def to_public_dict(self) -> dict:
-        """Public view: shows tile colors but not letters (until game ends)."""
+        
         return {
             "player_id": self.player_id,
             "attempts_used": self.attempts_used,

@@ -1,26 +1,20 @@
-/**
- * App — the top-level controller.
- *
- * Wires UI events → SocketClient emissions.
- * Wires SocketClient events → UI / GameState updates.
- */
+
 
 const App = (() => {
-  // ── Session state ─────────────────────────────────────────────────────
+
   let _nickname   = '';
   let _playerId   = null;
   let _roomCode   = null;
   let _roomId     = null;
   let _isHost     = false;
-  let _players    = [];   // full player list for the current room
+  let _players    = [];
   let _settings   = { word_length: 5, max_attempts: 6 };
   let _inGame     = false;
   let _pendingSubmit = false;
   let _pendingStart = false;
 
-  // ── Init ──────────────────────────────────────────────────────────────
   function init() {
-    // Restore nickname from localStorage
+
     const saved = localStorage.getItem('wr_nickname');
     if (saved) {
       _nickname = saved;
@@ -33,31 +27,25 @@ const App = (() => {
     SocketClient.connect();
   }
 
-  // ── UI event bindings ─────────────────────────────────────────────────
   function _bindUIEvents() {
-    // ── Nickname screen
+
     _on('nickname-input', 'keydown', e => { if (e.key === 'Enter') _submitNickname(); });
     _on('nickname-btn',   'click',   _submitNickname);
 
-    // ── Lobby screen
     _on('change-nickname-btn', 'click', () => UI.showScreen('screen-nickname'));
     _on('create-room-btn',     'click', _createRoom);
     _on('room-code-input',     'keydown', e => { if (e.key === 'Enter') _joinRoom(); });
     _on('join-room-btn',       'click', _joinRoom);
 
-    // ── Waiting room
     _on('leave-waiting-btn', 'click', _leaveRoom);
     _on('copy-code-btn',     'click', () => _copyToClipboard(_roomCode, 'Código copiado'));
     _on('copy-link-btn',     'click', () => _copyToClipboard(`${location.origin}/join/${_roomCode}`, 'Enlace copiado'));
     _on('start-game-btn',    'click', _startGame);
 
-    // ── Results screen
     _on('back-to-room-btn', 'click', _backToRoom);
 
-    // ── Physical keyboard
     document.addEventListener('keydown', _onPhysicalKey);
 
-    // ── Handle deep-link /join/<code>
     const path = window.location.pathname;
     const match = path.match(/^\/join\/([A-Z0-9]{6})$/i);
     if (match) {
@@ -65,7 +53,6 @@ const App = (() => {
     }
   }
 
-  // ── Socket event bindings ─────────────────────────────────────────────
   function _bindSocketEvents() {
     SocketClient.on('_connected', () => {
       UI.toast('Conectado', 'success', 1500);
@@ -79,7 +66,6 @@ const App = (() => {
       SocketClient.emit('reconnect_player', { player_id, room_code });
     });
 
-    // ── Room events ──────────────────────────────────────────────────
     SocketClient.on('room_created', data => {
       _saveSession(data.player.id, data.room_code);
       _isHost   = true;
@@ -99,7 +85,7 @@ const App = (() => {
     SocketClient.on('room_updated', data => {
       _players  = data.room.players;
       _settings = data.room.settings;
-      // If we're on the results screen and room went back to waiting, navigate there
+
       const onResults = document.getElementById('screen-results').classList.contains('active');
       if (onResults && data.room.state === 'waiting') {
         _inGame = false;
@@ -147,7 +133,6 @@ const App = (() => {
       UI.renderPlayersList(_players, _playerId, data.new_host_id);
     });
 
-    // ── Game events ──────────────────────────────────────────────────
     SocketClient.on('game_started', data => {
       _pendingStart = false;
       _inGame = true;
@@ -195,7 +180,6 @@ const App = (() => {
       }, 1800);
     });
 
-    // ── Reconnection ─────────────────────────────────────────────────
     SocketClient.on('reconnected', data => {
       const { player, room, game } = data;
       _playerId = player.id;
@@ -212,14 +196,12 @@ const App = (() => {
         GameState.reset(wl, ma);
         GameState.initOtherPlayers(_players.filter(p => p.id !== _playerId), _playerId);
 
-        // Restore own guesses
         if (game.my_guesses) {
           game.my_guesses.forEach(g => {
             GameState.applyGuessResult(g.tiles, g.tiles.every(t => t.state === 'correct'), 1);
           });
         }
 
-        // Restore other players' progress from game state
         if (game.player_states) {
           Object.entries(game.player_states).forEach(([pid, state]) => {
             if (pid !== _playerId) {
@@ -232,7 +214,6 @@ const App = (() => {
         UI.buildBoard(wl, ma);
         UI.buildKeyboard(_onKeyPress);
 
-        // Replay own guesses visually (instant, no animation)
         GameState.getGuesses().forEach((record, rowIdx) => {
           record.tiles.forEach((tile, c) => {
             const tileEl = document.querySelector(`.tile[data-row="${rowIdx}"][data-col="${c}"]`);
@@ -256,7 +237,6 @@ const App = (() => {
       UI.toast('Reconectado', 'success', 1500);
     });
 
-    // ── Error ────────────────────────────────────────────────────────
     SocketClient.on('error', data => {
       _pendingSubmit = false;
       _pendingStart = false;
@@ -271,7 +251,7 @@ const App = (() => {
       } else if (data.code === 'RATE_LIMIT') {
         UI.toast(msg, 'error');
       } else if (data.code === 'PLAYER_NOT_FOUND' || data.code === 'ROOM_NOT_FOUND') {
-        // Stale session — clear and go back to lobby
+
         _clearSession();
         UI.toast('Sesión expirada. Crea o únete a una sala.', 'error', 4000);
         _goToLobby();
@@ -281,7 +261,6 @@ const App = (() => {
     });
   }
 
-  // ── Actions ───────────────────────────────────────────────────────────
   function _submitNickname() {
     const input = document.getElementById('nickname-input');
     const name  = input ? input.value.trim() : '';
@@ -296,7 +275,6 @@ const App = (() => {
     if (el) el.textContent = _nickname;
     UI.showScreen('screen-lobby');
 
-    // Auto-fill code from deep link
     const pending = localStorage.getItem('wr_pending_join');
     if (pending) {
       localStorage.removeItem('wr_pending_join');
@@ -348,7 +326,7 @@ const App = (() => {
     const btn = document.getElementById('start-game-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Iniciando…'; }
     SocketClient.emit('start_game', { player_id: _playerId });
-    // Auto-reset if no response in 5s
+
     setTimeout(() => {
       _pendingStart = false;
       if (btn) { btn.disabled = false; btn.textContent = '¡Comenzar juego!'; }
@@ -358,14 +336,13 @@ const App = (() => {
   function _backToRoom() {
     _inGame = false;
     if (_isHost) {
-      // Host resets the room for everyone; non-hosts wait for room_updated
+
       SocketClient.emit('reset_room', { player_id: _playerId });
     }
     UI.showScreen('screen-waiting');
     _renderWaitingRoom();
   }
 
-  // ── Keyboard input ────────────────────────────────────────────────────
   function _onKeyPress(key) {
     if (!_inGame || GameState.isFinished() || _pendingSubmit) return;
 
@@ -398,7 +375,6 @@ const App = (() => {
     SocketClient.emit('submit_guess', { word: GameState.getSubmitWord(), player_id: _playerId });
   }
 
-  // ── Session persistence ───────────────────────────────────────────────
   function _saveSession(playerId, roomCode) {
     _playerId = playerId;
     _roomCode = roomCode;
@@ -414,7 +390,6 @@ const App = (() => {
     localStorage.removeItem('wr_room_code');
   }
 
-  // ── Misc ─────────────────────────────────────────────────────────────
   function _getHostId() {
     const host = _players.find(p => p.is_host);
     return host ? host.id : null;

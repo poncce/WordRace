@@ -1,9 +1,4 @@
-"""
-In-memory implementations of all repository interfaces.
 
-All data lives in Python dicts protected by RLock for thread safety.
-To migrate to Redis or a DB, implement the ABC interfaces in a new module.
-"""
 from __future__ import annotations
 import threading
 from typing import Dict, List, Optional
@@ -19,7 +14,7 @@ from app.repositories.base import (
 class MemoryRoomRepository(AbstractRoomRepository):
     def __init__(self):
         self._rooms: Dict[str, Room] = {}
-        self._code_index: Dict[str, str] = {}  # code -> room_id
+        self._code_index: Dict[str, str] = {}  
         self._lock = threading.RLock()
 
     def create(self, room: Room) -> Room:
@@ -60,7 +55,7 @@ class MemoryRoomRepository(AbstractRoomRepository):
 class MemoryPlayerRepository(AbstractPlayerRepository):
     def __init__(self):
         self._players: Dict[str, Player] = {}
-        self._socket_index: Dict[str, str] = {}  # socket_id -> player_id
+        self._socket_index: Dict[str, str] = {}  
         self._lock = threading.RLock()
 
     def create(self, player: Player) -> Player:

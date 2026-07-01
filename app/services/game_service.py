@@ -33,12 +33,12 @@ class GameService:
         self._rooms = room_repo
         self._players = player_repo
         self._word_service = word_service
-        # rate-limit tracker: player_id -> list of timestamps
+        
         self._guess_times: dict[str, list[datetime]] = {}
 
-    # ------------------------------------------------------------------
-    # Game lifecycle
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def start_game(self, player_id: str) -> tuple[Room, Game]:
         player = self._players.get(player_id)
@@ -55,7 +55,7 @@ class GameService:
         if room.player_count < 1:
             raise RoomNotInStateError("waiting", "sin jugadores")
 
-        # Reset from a previous finished game
+        
         if room.state == RoomState.FINISHED:
             room.state = RoomState.WAITING
             room.game = None
@@ -92,20 +92,7 @@ class GameService:
     def submit_guess(
         self, player_id: str, raw_word: str
     ) -> dict:
-        """
-        Process a player's guess.
-
-        Returns a result dict with:
-          - guess_record: GuessRecord
-          - won: bool
-          - attempts_used: int
-          - attempts_left: int
-          - player_finished: bool
-          - game_finished: bool
-          - game: Game
-          - room: Room
-          - rankings: list (populated when game finishes)
-        """
+        
         player = self._players.get(player_id)
         if not player:
             raise PlayerNotFoundError(player_id)
@@ -128,7 +115,7 @@ class GameService:
 
         self._enforce_rate_limit(player_id)
 
-        # Validate word + evaluate (raises on invalid word)
+        
         record = self._word_service.validate_and_evaluate(
             raw_word, game.word, game.word_length
         )
@@ -144,7 +131,7 @@ class GameService:
             pstate.finished = True
             pstate.finish_time = datetime.utcnow()
 
-        # Check whether the entire game is over
+        
         game_finished = self._is_game_finished(game)
         rankings: list = []
 
@@ -171,9 +158,9 @@ class GameService:
             "rankings": rankings,
         }
 
-    # ------------------------------------------------------------------
-    # Queries
-    # ------------------------------------------------------------------
+    
+    
+    
 
     def get_game_for_player(self, player_id: str) -> Optional[Game]:
         player = self._players.get(player_id)
@@ -182,23 +169,23 @@ class GameService:
         room = self._rooms.get(player.room_id)
         return room.game if room else None
 
-    # ------------------------------------------------------------------
-    # Internal
-    # ------------------------------------------------------------------
+    
+    
+    
 
     @staticmethod
     def _is_game_finished(game: Game) -> bool:
-        # Game ends when any player wins
+        
         if any(s.won for s in game.player_states.values()):
             return True
-        # Or all connected players are out of attempts
+        
         active = [s for s in game.player_states.values() if not s.finished]
         return len(active) == 0
 
     def _enforce_rate_limit(self, player_id: str) -> None:
         now = datetime.utcnow()
         history = self._guess_times.setdefault(player_id, [])
-        # Keep only the last 60 seconds
+        
         history[:] = [t for t in history if (now - t).total_seconds() < 60]
         if len(history) >= Config.GUESS_RATE_LIMIT:
             raise RateLimitError()

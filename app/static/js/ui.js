@@ -1,12 +1,7 @@
-/**
- * UI — all DOM manipulation.
- *
- * Depends on: GameState
- * Never touches network / socket directly.
- */
+
 
 const UI = (() => {
-  // ── Screen management ────────────────────────────────────────────────
+
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(id);
@@ -14,7 +9,6 @@ const UI = (() => {
     window.scrollTo(0, 0);
   }
 
-  // ── Toast notifications ──────────────────────────────────────────────
   function toast(message, type = 'default', duration = 2500) {
     const container = document.getElementById('toast-container');
     const el = document.createElement('div');
@@ -27,7 +21,6 @@ const UI = (() => {
     }, duration);
   }
 
-  // ── Waiting room ─────────────────────────────────────────────────────
   function updateRoomCode(code) {
     const el = document.getElementById('room-code-big');
     if (el) el.textContent = code;
@@ -40,6 +33,8 @@ const UI = (() => {
 
     const connected = players.filter(p => p.connected !== false);
     if (countEl) countEl.textContent = connected.length;
+    const settingsCount = document.getElementById('settings-player-count');
+    if (settingsCount) settingsCount.textContent = connected.length;
 
     list.innerHTML = '';
     players.forEach(p => {
@@ -70,12 +65,10 @@ const UI = (() => {
     if (waitHint)  waitHint.classList.toggle('hidden', isHost);
   }
 
-  // ── Game board ───────────────────────────────────────────────────────
   function buildBoard(wordLength, maxAttempts) {
     const board = document.getElementById('game-board');
     board.innerHTML = '';
 
-    // Adjust tile size for longer words
     const tileSize = wordLength >= 7 ? '46px' : (wordLength === 6 ? '52px' : '58px');
     document.documentElement.style.setProperty('--tile-size', tileSize);
 
@@ -133,7 +126,7 @@ const UI = (() => {
     const rowEl = _getRow(rowIndex);
     if (!rowEl) return;
     rowEl.classList.remove('shake');
-    void rowEl.offsetWidth; // force reflow
+    void rowEl.offsetWidth;
     rowEl.classList.add('shake');
     setTimeout(() => rowEl.classList.remove('shake'), 400);
   }
@@ -148,7 +141,6 @@ const UI = (() => {
     }
   }
 
-  // ── Keyboard ─────────────────────────────────────────────────────────
   const ROWS = [
     ['Q','W','E','R','T','Y','U','I','O','P'],
     ['A','S','D','F','G','H','J','K','L','Ñ'],
@@ -183,7 +175,6 @@ const UI = (() => {
     });
   }
 
-  // ── Players sidebar ──────────────────────────────────────────────────
   function renderPlayersProgress(otherPlayers, wordLength, maxAttempts) {
     const container = document.getElementById('players-progress');
     if (!container) return;
@@ -217,7 +208,7 @@ const UI = (() => {
   function updatePlayerProgress(pid, data, wordLength, maxAttempts) {
     let item = document.getElementById(`pp-${pid}`);
     if (!item) {
-      // Player joined after game start
+
       renderPlayersProgress(GameState.getOtherPlayers(), wordLength, maxAttempts);
       return;
     }
@@ -258,7 +249,6 @@ const UI = (() => {
     }
   }
 
-  // ── Results screen ───────────────────────────────────────────────────
   function renderResults(word, rankings, myId) {
     const titleEl    = document.getElementById('results-title');
     const wordEl     = document.getElementById('secret-word');
@@ -269,7 +259,6 @@ const UI = (() => {
       titleEl.textContent = myRank?.won ? '🎉 ¡Ganaste!' : '😔 Fin del juego';
     }
 
-    // Show word as tiles
     if (wordEl) {
       wordEl.innerHTML = '';
       [...word].forEach(letter => {
@@ -280,7 +269,6 @@ const UI = (() => {
       });
     }
 
-    // Rankings
     if (rankEl) {
       rankEl.innerHTML = '';
       const medals = ['🥇','🥈','🥉'];
@@ -306,7 +294,6 @@ const UI = (() => {
     if (el) el.textContent = text;
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────
   function _getRow(index) {
     return document.querySelector(`.board-row[data-row="${index}"]`);
   }

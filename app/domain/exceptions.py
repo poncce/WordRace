@@ -1,5 +1,5 @@
 class WordleRaceError(Exception):
-    """Base exception for all domain errors."""
+    
     code: str = "INTERNAL_ERROR"
 
     def __init__(self, message: str, code: str | None = None):

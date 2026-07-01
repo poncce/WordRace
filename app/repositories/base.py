@@ -1,10 +1,4 @@
-"""
-Abstract repository interfaces.
 
-These define the contract that any storage backend must fulfill.
-Replacing MemoryRepository with RedisRepository or SQLRepository
-only requires implementing these interfaces — no service code changes.
-"""
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional

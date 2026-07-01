@@ -2,7 +2,7 @@ from app.repositories.base import AbstractWordCacheRepository
 
 
 class CacheService:
-    """Thin service wrapper over the word validity cache repository."""
+    
 
     def __init__(self, cache_repo: AbstractWordCacheRepository):
         self._repo = cache_repo
