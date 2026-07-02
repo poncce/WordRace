@@ -85,6 +85,12 @@ class InvalidSettingsError(WordleRaceError):
     code = "INVALID_SETTINGS"
 
 
+class DuplicateGuessError(WordleRaceError):
+    code = "DUPLICATE_GUESS"
+
+    def __init__(self, word: str):
+        super().__init__(f"Ya intentaste '{word}'.")
+
 class RateLimitError(WordleRaceError):
     code = "RATE_LIMIT"
 
