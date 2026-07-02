@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Optional
 from app.config import Config
 from app.domain.exceptions import (
     AlreadyFinishedError,
+    DuplicateGuessError,
     GameNotActiveError,
     NotHostError,
     PlayerNotFoundError,
@@ -112,13 +113,16 @@ class GameService:
             raise PlayerNotFoundError(player_id)
         if pstate.finished:
             raise AlreadyFinishedError()
-
         self._enforce_rate_limit(player_id)
 
+        
         
         record = self._word_service.validate_and_evaluate(
             raw_word, game.word, game.word_length
         )
+
+        if any(g.word == record.word for g in pstate.guesses):
+            raise DuplicateGuessError(record.word)
 
         pstate.guesses.append(record)
 
