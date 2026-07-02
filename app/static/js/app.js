@@ -245,7 +245,7 @@ const App = (() => {
 
       const msg = data.message || 'Error desconocido';
 
-      if (data.code === 'INVALID_WORD' || data.code === 'WRONG_WORD_LENGTH') {
+      if (data.code === 'INVALID_WORD' || data.code === 'WRONG_WORD_LENGTH' || data.code === 'DUPLICATE_GUESS') {
         UI.setGuessMessage(msg);
         UI.shakeRow(GameState.getCurrentRow());
       } else if (data.code === 'RATE_LIMIT') {
